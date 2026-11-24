@@ -1,0 +1,440 @@
+from pathlib import ll,
+
+html = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Store</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      background: #f7f7f7;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      border: 2px solid #d7d7d7;
+    }
+
+    /* HEADER */
+    header {
+      height: 60px;
+      background: #0d4b63;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .header-buttons button {
+      border: 1px solid #aaa;
+      background: #f3f3f3;
+      color: #222;
+      padding: 4px 9px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+    }
+
+    .header-buttons button:hover {
+      background: #fff;
+    }
+
+    /* MAIN AREA */
+    .main {
+      flex: 1;
+      display: flex;
+      min-height: 600px;
+    }
+
+    /* SIDEBAR */
+    aside {
+      width: 205px;
+      background: #d9edf4;
+      border-right: 2px solid #c5d7dd;
+      padding-top: 8px;
+    }
+
+    .menu {
+      list-style: none;
+    }
+
+    .menu li a {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      color: #222;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 14px 8px;
+      transition: 0.2s;
+    }
+
+    .menu li a:hover,
+    .menu li a.active {
+      background: #c5e2ec;
+      color: #0d4b63;
+    }
+
+    /* CONTENT */
+    .content {
+      flex: 1;
+      background: #fff;
+      padding: 32px 24px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .intro h1 {
+      font-size: 21px;
+      margin-bottom: 15px;
+    }
+
+    .intro p {
+      font-size: 14px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid #eee;
+      background: #f5f5f5;
+    }
+
+    .card {
+      text-align: center;
+      padding: 9px 14px 20px;
+      border-right: 1px solid #e5e5e5;
+      transition: 0.25s;
+    }
+
+    .card:last-child {
+      border-right: none;
+    }
+
+    .card:hover {
+      background: #fff;
+      transform: translateY(-2px);
+    }
+
+    .product-image {
+      width: 125px;
+      height: 110px;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 58px;
+      border-radius: 2px;
+    }
+
+    .phone {
+      background: linear-gradient(135deg, #e8f1f5, #d7e0e4);
+    }
+
+    .laptop {
+      background: linear-gradient(135deg, #e8ddd1, #cdbca8);
+    }
+
+    .headphones {
+      background: linear-gradient(135deg, #ffd72e, #f3b900);
+    }
+
+    .watch {
+      background: linear-gradient(135deg, #eeeeee, #d8d8d8);
+    }
+
+    .card h2 {
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    .divider {
+      height: 1px;
+      background: #d9e3e6;
+      margin: 38px 22px 0;
+    }
+
+    /* FOOTER */
+    footer {
+      height: 45px;
+      background: #0d4b63;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 330px;
+      background: white;
+      padding: 25px;
+      border-radius: 6px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    .modal-box h2 {
+      margin-bottom: 18px;
+      color: #0d4b63;
+      text-align: center;
+    }
+
+    .modal-box input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+    }
+
+    .modal-box .submit {
+      width: 100%;
+      padding: 10px;
+      background: #0d4b63;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .close {
+      float: right;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .products {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .card:nth-child(2) {
+        border-right: none;
+      }
+
+      aside {
+        width: 150px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        height: auto;
+        padding: 12px;
+      }
+
+      .main {
+        flex-direction: column;
+      }
+
+      aside {
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px solid #c5d7dd;
+      }
+
+      .menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .menu li a {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+
+      .products {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        border-right: none;
+        border-bottom: 1px solid #e5e5e5;
+      }
+
+      .content {
+        padding: 25px 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <header>
+      <div class="logo">E-Commerce</div>
+
+      <div class="header-buttons">
+        <button onclick="openModal('login')">Login</button>
+        <button onclick="openModal('register')">Register</button>
+      </div>
+    </header>
+
+    <div class="main">
+
+      <aside>
+        <ul class="menu">
+          <li><a href="#" class="active" onclick="showMessage('Home')">Home</a></li>
+          <li><a href="#" onclick="showMessage('Smartphones')">Smartphones</a></li>
+          <li><a href="#" onclick="showMessage('Laptops')">Laptops</a></li>
+          <li><a href="#" onclick="showMessage('Headphones')">Headphones</a></li>
+          <li><a href="#" onclick="showMessage('Smart Watches')">Smart Watches</a></li>
+          <li><a href="#" onclick="showMessage('Special Offers')">Special Offers</a></li>
+        </ul>
+      </aside>
+
+      <main class="content">
+
+        <section class="intro">
+          <h1>About our Electronic Store</h1>
+          <p>Explore modern gadgets and electronics designed to make your everyday life easier.</p>
+        </section>
+
+        <section class="products">
+
+          <article class="card">
+            <div class="product-image phone">📱</div>
+            <h2>Smartphones</h2>
+            <p>Latest smartphones with powerful features and stylish designs.</p>
+          </article>
+
+          <article class="card">
+            <div class="product-image laptop">💻</div>
+            <h2>Laptops</h2>
+            <p>Fast and reliable laptops for students and professionals.</p>
+          </article>
+
+          <article class="card">
+            <div class="product-image headphones">🎧</div>
+            <h2>Headphones</h2>
+            <p>Enjoy clear sound with comfortable wireless headphones.</p>
+          </article>
+
+          <article class="card">
+            <div class="product-image watch">⌚</div>
+            <h2>Smart Watches</h2>
+            <p>Track your time, activities and stay connected every day.</p>
+          </article>
+
+        </section>
+
+        <div class="divider"></div>
+
+      </main>
+    </div>
+
+    <footer>
+      © 2026 E-Commerce | Your Smart Shopping Partner
+    </footer>
+  </div>
+
+  <!-- LOGIN / REGISTER MODAL -->
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Login</h2>
+
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+
+      <button class="submit" onclick="submitForm()">Continue</button>
+    </div>
+  </div>
+
+  <script>
+    function openModal(type) {
+      document.getElementById("modal").classList.add("show");
+
+      if (type === "register") {
+        document.getElementById("modalTitle").textContent = "Register";
+      } else {
+        document.getElementById("modalTitle").textContent = "Login";
+      }
+    }
+
+    function closeModal() {
+      document.getElementById("modal").classList.remove("show");
+    }
+
+    function submitForm() {
+      const username = document.getElementById("username").value;
+
+      if (username.trim() === "") {
+        alert("Please enter your username.");
+        return;
+      }
+
+      alert("Welcome, " + username + "!");
+      closeModal();
+    }
+
+    function showMessage(category) {
+      event.preventDefault();
+      alert("You selected: " + category);
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById("modal");
+
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+  </script>
+</body>
+</html>
+
+
+path = Path("/mnt/data/ecommerce_store.html")
+path.write_text(html, encoding="utf-8")
+
+print(f"Created: {path}")
